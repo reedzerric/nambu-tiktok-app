@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nambu Lore — TikTok integration</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+  <h1>Nambu Lore</h1>
+  <p class="lede">An autonomous assistant that runs on one person's Windows desktop. This site exists for its TikTok integration: what the integration does, what it stores, and how to contact the operator.</p>
+
+  <h2>What the TikTok integration does</h2>
+  <p>Nambu Lore is the TikTok integration of NAMBU. It posts short AI-generated science-fiction lore videos to <strong>one TikTok account — the account of the person who authorizes it</strong>, through TikTok's official Content Posting API. Nothing else. It does not read other people's content, does not follow, comment, message, or interact with other accounts, and does not operate on behalf of anyone but its own operator.</p>
+  <ul>
+    <li>Every video it publishes is labelled as AI-generated content where it is.</li>
+    <li>Every publish is confirmed by a human on the desktop before the request is sent.</li>
+    <li>Until TikTok has audited this client, every post is private (<code>SELF_ONLY</code>) by platform rule, and the software refuses to ask for anything else.</li>
+  </ul>
+
+  <h2>What it stores</h2>
+  <p>The OAuth access token and refresh token TikTok issues, encrypted with the Windows Data Protection API, in the operator's own user profile on a single machine. No server holds them, because there is no server. There is no database, no analytics, and no third party.</p>
+
+  <h2>Scopes it asks for</h2>
+  <ul>
+    <li><code>user.info.basic</code> — to show which account is connected.</li>
+    <li><code>video.publish</code>, <code>video.upload</code> — to post to that account.</li>
+  </ul>
+
+  <h2>Revoking it</h2>
+  <p>In the TikTok app: <em>Profile → Settings and privacy → Security and permissions → Manage app permissions</em>, then remove this app. Access stops immediately and the stored tokens become useless.</p>
+
+  <nav>
+    <a href="/terms/">Terms of Service</a> ·
+    <a href="/privacy/">Privacy Policy</a>
+  </nav>
+  <p class="contact">Contact: <a href="mailto:tenthsignal@nambugames.com">tenthsignal@nambugames.com</a></p>
+</main>
+</body>
+</html>

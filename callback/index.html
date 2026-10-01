@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Authorization callback — Nambu Lore</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+  <h1>Authorization callback</h1>
+  <p class="lede" id="lede">Reading the address bar…</p>
+
+  <div id="ok" hidden>
+    <p>TikTok sent an authorization code back. Copy the line below and finish on the machine running NAMBU:</p>
+    <pre><code class="code-box" id="command"></code></pre>
+    <button id="copy">Copy command</button>
+    <p class="updated">The code is single-use and short-lived. Nothing on this page is sent anywhere — it is a static file, and the code never leaves your browser until you paste it yourself.</p>
+  </div>
+
+  <div id="bad" hidden>
+    <p id="error"></p>
+    <p>Start again with <code>python -m nambu.agent_api tiktok-auth --start</code>.</p>
+  </div>
+
+  <nav><a href="/">Home</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a></nav>
+</main>
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var lede = document.getElementById("lede");
+  var error = params.get("error");
+
+  if (error) {
+    lede.textContent = "TikTok refused the authorization.";
+    document.getElementById("error").textContent =
+      error + (params.get("error_description") ? ": " + params.get("error_description") : "");
+    document.getElementById("bad").hidden = false;
+    return;
+  }
+
+  if (!params.get("code")) {
+    lede.textContent = "No authorization code in this URL.";
+    document.getElementById("error").textContent =
+      "This page is the redirect target for NAMBU's TikTok authorization. Opening it directly does nothing.";
+    document.getElementById("bad").hidden = false;
+    return;
+  }
+
+  // The command wants the whole URL, not the bare code: the state travels with
+  // it and is checked against the one parked when the consent URL was built.
+  var command =
+    'python -m nambu.agent_api tiktok-auth --callback-url "' + window.location.href + '"';
+  lede.textContent = "Authorized.";
+  document.getElementById("command").textContent = command;
+  document.getElementById("ok").hidden = false;
+
+  document.getElementById("copy").addEventListener("click", function () {
+    navigator.clipboard.writeText(command).then(function () {
+      document.getElementById("copy").textContent = "Copied";
+    });
+  });
+})();
+</script>
+</body>
+</html>
